@@ -8,49 +8,49 @@ const time = document.querySelector('#time');
 let progress = 0;
 
 const words = [
-    {
-      word: "Sun",
-      translate: "Солнце",
-      example: "How could you sit in the sun!",
-    },
-  
-    {
-      word: "Candies",
-      translate: "Конфеты",
-      example: "But she brings me sweets and that sort of thing",
-    },
-  
-    {
-      word: "Fridge",
-      translate: "Холодильник",
-      example: "You just broke my fridge!",
-    },
-  
-    {
-      word: "Lamp",
-      translate: "Лампа",
-      example: "And lastly a paraffin lamp!",
-    },
-  
-    {
-      word: "Strawberry",
-      translate: "Клубника",
-      example: "Had a strawberry patch",
-    }
-  ];
+  {
+    word: "Sun",
+    translate: "Солнце",
+    example: "How could you sit in the sun!",
+  },
+
+  {
+    word: "Candies",
+    translate: "Конфеты",
+    example: "But she brings me sweets and that sort of thing",
+  },
+
+  {
+    word: "Fridge",
+    translate: "Холодильник",
+    example: "You just broke my fridge!",
+  },
+
+  {
+    word: "Lamp",
+    translate: "Лампа",
+    example: "And lastly a paraffin lamp!",
+  },
+
+  {
+    word: "Strawberry",
+    translate: "Клубника",
+    example: "Had a strawberry patch",
+  }
+];
 
 const currentWords = [...words];
 
-function makeCard ({word, translate, example}) {
-    card.querySelector('#card-front h1').textContent = word;
-    card.querySelector('#card-back h1').textContent = translate;
-    card.querySelector('#card-back p span').textContent = example;
+function makeCard({ word, translate, example }) {
+  card.querySelector('#card-front h1').textContent = word;
+  card.querySelector('#card-back h1').textContent = translate;
+  card.querySelector('#card-back p span').textContent = example;
 };
 
 function renderCard(arr) {
-    arr.forEach((item) => {
-        makeCard(item);
-    })
+  arr.forEach((item) => {
+    makeCard(item);
+  })
 };
 
 renderCard(currentWords);
@@ -63,40 +63,39 @@ function getRandomCard(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-shuffleWords.addEventListener('click', () =>{
+shuffleWords.addEventListener('click', () => {
   makeCard(getRandomCard(currentWords));
 })
 
-function showProgress () {
+function showProgress() {
   document.querySelector('#words-progress').value = progress * 25;
   document.querySelector('#current-word').textContent = progress + 1;
   makeCard(currentWords[progress]);
 }
 
-
-buttonNext.onclick = function () {
+buttonNext.addEventListener('click', () => {
   progress = ++progress;
   buttonBack.disabled = false;
   if (progress == 4) {
     buttonNext.disabled = true;
   }
   showProgress();
-};
+});
 
-buttonBack.onclick = function () {
+buttonBack.addEventListener('click', () => {
   progress = --progress;
-  if (progress == 0) {
+  if (progress === 0) {
     buttonBack.disabled = true;
   }
   if (progress < 5) {
     buttonNext.disabled = false;
   }
   showProgress();
-};
+});
 
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
@@ -169,7 +168,15 @@ function showExamProgress(value) {
 
 examCards.addEventListener("click", (event) => {
   const card = event.target.closest(".card");
-  if (click === false) {
+  if (!click) {
+    card.classList.add("correct");
+    firstCard = card;
+    firstCardIndex = currentWords.findIndex((item) => item.word === card.textContent);
+    if (firstCardIndex === -1) {
+      firstCardIndex = currentWords.indexOf((item) => item.translate === card.textContent);
+    }
+    click = true;
+  } else if (click) {
     card.classList.add("correct");
     firstCard = card;
     firstCardIndex = currentWords.findIndex((item) => item.word === card.textContent);
@@ -208,4 +215,4 @@ examCards.addEventListener("click", (event) => {
       }, 500);
     }
   }
-});
+  });
